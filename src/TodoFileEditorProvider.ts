@@ -104,6 +104,15 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
       vscode.Uri.joinPath(this.context.extensionUri, "media", "style.css")
     );
 
+    const codiconsUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "node_modules",
+        "@vscode/codicons",
+        "dist",
+        "codicon.css"
+      )
+    );
     const nonce = getNonce();
 
     return /* html */ `
@@ -111,12 +120,13 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
       <html lang="en">
         <head>
           <meta charset="UTF-8">
-          <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource}; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+          <meta http-equiv="Content-Security-Policy" content="default-src 'none'; font-src ${webview.cspSource};img-src ${webview.cspSource}; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
 				  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
           <link href="${styleResetUri}" rel="stylesheet" />
           <link href="${styleVSCodeUri}" rel="stylesheet" />
           <link href="${styleMainUri}" rel="stylesheet" />
+          <link href="${codiconsUri}" rel="stylesheet" />
 
           <title>Todo File Manager</title>
         </head>
