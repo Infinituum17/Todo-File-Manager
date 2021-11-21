@@ -131,7 +131,7 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
           <title>Todo File Manager</title>
         </head>
         <body>
-          <h1>TODOs:</h1>
+          <div id="todo-file-root"></div>
           <script nonce="${nonce}" src="${scriptUri}"></script>
         </body>
       </html>
