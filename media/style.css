@@ -1,6 +1,7 @@
 .todo {
+  position: relative;
   display: flex;
-  padding-top: 16px;
+  padding-top: 24px;
 }
 
 .todo > * {
@@ -8,15 +9,17 @@
 }
 
 .todo > button {
-  width: fit-content;
+  width: 32px;
+  height: 32px;
   padding: 0 8px;
-  box-shadow: 0.5px 0.5px 2px black;
+
+  border-radius: 4px;
 }
 
-.todo > button:active {
-  border: 1px var(--vscode-button-background);
+.todo > input {
+  border-radius: 5px;
 }
 
-.todo > [id*="_title"] {
+.todo > [class*="_title"] {
   width: 128px;
 }
