@@ -84,30 +84,27 @@ class DocumentParser {
     let htmlbuffer = "";
 
     tokens.forEach((token) => {
+      const currentStatus = token.isOptional
+        ? "question"
+        : token.isChecked
+        ? "pass"
+        : "circle-large-outline";
+
       htmlbuffer += /* html */ `
         <div class="todo" id="todo_${token.id}">
-          <button id="todo_${token.id}_status">
-            <i class="codicon codicon-${
-              token.isOptional
-                ? "question"
-                : token.isChecked
-                ? "pass"
-                : "circle-large-outline"
-            }"></i>
-            </button>
-          <input type="text" id="todo_${token.id}_title" value="${
-        token.title
-      }" />
-          <input type="text" id="todo_${token.id}_description" value="${
-        token.description
-      }" />
+          <button class="todo_status">
+            <i class="codicon codicon-${currentStatus}"></i>
+          </button>
+          <input type="text" class="todo_title" value="${token.title}" />
+          <input type="text" class="todo_description" value="${token.description}" />
+          <button class="todo_delete">
+            <i class="codicon codicon-trash"></i>
+          </button>
         </div>
       `;
     });
 
     root.innerHTML = htmlbuffer;
-
-    // TODO: Implement editing events
   };
 
   const state = vscode.getState();
