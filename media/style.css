@@ -23,3 +23,47 @@
 .todo > [class*="_title"] {
   width: 128px;
 }
+
+.todo > .question {
+  transition: 0.1s ease-in;
+  background-color: #0081d5;
+  box-shadow: 0px 2px #00377f;
+}
+
+.todo > .question:hover {
+  transform: translateY(2.5px);
+  box-shadow: 0px 0px #00377f;
+}
+
+.todo > .pass {
+  transition: 0.1s ease-in;
+  background-color: #00967f;
+  box-shadow: 0px 2px #005d49;
+}
+
+.todo > .pass:hover {
+  transform: translateY(2.5px);
+  box-shadow: 0px 0px #005d49;
+}
+
+.todo > .circle-large-outline {
+  transition: 0.1s ease-in;
+  background-color: #7e57c2;
+  box-shadow: 0px 2px #2b0f71;
+}
+
+.todo > .circle-large-outline:hover {
+  transform: translateY(2.5px);
+  box-shadow: 0px 0px #2b0f71;
+}
+
+.todo > .todo_delete {
+  transition: 0.1s ease-in;
+  background-color: #d7436d;
+  box-shadow: 0px 2px #640017;
+}
+
+.todo > .todo_delete:hover {
+  transform: translateY(2.5px);
+  box-shadow: 0px 0px #640017;
+}
