@@ -1,7 +1,7 @@
 .todo {
   position: relative;
   display: flex;
-  padding-top: 32px;
+  padding-top: 24px;
 }
 
 .todo > * {
@@ -18,10 +18,18 @@
   padding: 0 8px;
   border-radius: 4px;
   transition: 0.1s ease-in;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
 }
 
 .rounded_button:hover {
   transform: translateY(2.5px);
+
+  color: white;
 }
 
 #todo_head {
@@ -33,7 +41,7 @@
   height: 32px;
 }
 
-.todo > input {
+input {
   border-radius: 5px;
 }
 
@@ -59,12 +67,12 @@
   box-shadow: 0px 0px #005d49;
 }
 
-.todo > .circle-large-outline {
+a[class*="rounded_button"] {
   background-color: #7e57c2;
   box-shadow: 0px 2px #2b0f71;
 }
 
-.todo > .circle-large-outline:hover {
+a[class*="rounded_button"]:hover {
   box-shadow: 0px 0px #2b0f71;
 }
 
