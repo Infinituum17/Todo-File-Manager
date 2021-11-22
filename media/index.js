@@ -112,7 +112,20 @@ class DocumentParser {
       `;
     });
 
+    //HTML Footer
+
     root.innerHTML = htmlbuffer;
+
+    // TODO: Event Handling
+    // @ts-ignore
+    root.querySelector("#todo_head #todo_new").onclick = () => {};
+
+    for (let i = 0; i < tokens.length; i++) {
+      // @ts-ignore
+      root.querySelector(`#todo_${i} .todo_status`).onclick = () => {};
+      // @ts-ignore
+      root.querySelector(`#todo_${i} .todo_delete`).onclick = () => {};
+    }
   };
 
   const state = vscode.getState();
