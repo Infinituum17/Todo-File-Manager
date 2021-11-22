@@ -81,8 +81,16 @@ class DocumentParser {
 
     const tokens = DocumentParser.parseTokens(text);
 
-    let htmlbuffer = "";
+    // HTML Head
+    let htmlbuffer = /* html */ `
+      <div id="todo_head">
+        <button class="rounded_button" id="todo_new">
+          <i class="codicon codicon-add"></i>
+        </button>
+      </div>
+    `;
 
+    // HTML Body
     tokens.forEach((token) => {
       const currentStatus = token.isOptional
         ? "question"
@@ -92,12 +100,12 @@ class DocumentParser {
 
       htmlbuffer += /* html */ `
         <div class="todo" id="todo_${token.id}">
-          <button class="todo_status">
+          <button class="rounded_button todo_status ${currentStatus}">
             <i class="codicon codicon-${currentStatus}"></i>
           </button>
           <input type="text" class="todo_title" value="${token.title}" />
           <input type="text" class="todo_description" value="${token.description}" />
-          <button class="todo_delete">
+          <button class="rounded_button todo_delete">
             <i class="codicon codicon-trash"></i>
           </button>
         </div>
