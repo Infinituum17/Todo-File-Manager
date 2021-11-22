@@ -84,9 +84,9 @@ class DocumentParser {
     // HTML Head
     let htmlbuffer = /* html */ `
       <div id="todo_head">
-        <button class="rounded_button" id="todo_new">
+        <a title="Add new todo" class="rounded_button" id="todo_new">
           <i class="codicon codicon-add"></i>
-        </button>
+        </a>
       </div>
     `;
 
@@ -98,16 +98,22 @@ class DocumentParser {
         ? "pass"
         : "circle-large-outline";
 
+      const currentStatusTitle = token.isOptional
+        ? "Optional"
+        : token.isChecked
+        ? "Completed"
+        : "To complete";
+
       htmlbuffer += /* html */ `
         <div class="todo" id="todo_${token.id}">
-          <button class="rounded_button todo_status ${currentStatus}">
+          <a class="rounded_button todo_status ${currentStatus}" title="${currentStatusTitle}">
             <i class="codicon codicon-${currentStatus}"></i>
-          </button>
+          </a>
           <input type="text" class="todo_title" value="${token.title}" />
           <input type="text" class="todo_description" value="${token.description}" />
-          <button class="rounded_button todo_delete">
+          <a class="rounded_button todo_delete" title="Delete">
             <i class="codicon codicon-trash"></i>
-          </button>
+          </a>
         </div>
       `;
     });
