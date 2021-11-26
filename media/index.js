@@ -136,10 +136,20 @@ class DocumentParser {
 
 
     for (let i = 0; i < tokens.length; i++) {
+      const currentElement = root.querySelector(`#todo_${i}`);
+
       // @ts-ignore
-      root.querySelector(`#todo_${i} .todo_status`).onclick = () => {};
+      currentElement
+        .querySelector(`.todo_status`)
+        .addEventListener("click", () =>
+          vscode.postMessage({ type: "toggle", id: i })
+        );
       // @ts-ignore
-      root.querySelector(`#todo_${i} .todo_delete`).onclick = () => {};
+      currentElement
+        .querySelector(`.todo_delete`)
+        .addEventListener("click", () =>
+          vscode.postMessage({ type: "remove", id: i })
+        );
     }
   };
 

@@ -53,6 +53,11 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
         case "remove":
           this.removeTodo(document, e.id);
           return;
+
+        case "toggle":
+          this.toggleTodo(document, e.id);
+          return;
+
         case "save":
           document.save();
           return;
@@ -71,6 +76,33 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
 
   private removeTodo(document: vscode.TextDocument, id: string) {
     // TODO: Remove a TODO
+    const text = document.getText();
+
+    let i = this.getIndexFromId(document, id);
+
+    // FIXME: Optimize: do not use Array manipulation
+
+    this.updateLineInTextDocument(document, "", i);
+  }
+
+  private toggleTodo(document: vscode.TextDocument, id: string) {
+    const text = document.getText();
+
+    let i = this.getIndexFromId(document, id);
+
+    // FIXME: Optimize: do not use Array manipulation
+
+    const lines = text.split("\n");
+
+    if (lines[i].match("[x]")) {
+      lines[i] = lines[i].replace("[x]", "[ ]");
+    } else if (lines[i].match("[?]")) {
+      lines[i] = lines[i].replace("[?]", "[x]");
+    } else if (lines[i].match("[ ]")) {
+      lines[i] = lines[i].replace("[ ]", "[?]");
+    }
+
+    this.updateLineInTextDocument(document, lines[i], i);
   }
 
   private getIndexFromId(document: vscode.TextDocument, id: string) {
