@@ -73,14 +73,16 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
     this.updateTextDocument(document, text);
   }
 
-  private updateTextDocument(document: vscode.TextDocument, text: any) {
+  private updateLineInTextDocument(
+    document: vscode.TextDocument,
+    text: string,
+    index: number
+  ) {
     const edit = new vscode.WorkspaceEdit();
-
-    // TODO: Add document partial editing
 
     edit.replace(
       document.uri,
-      new vscode.Range(0, 0, document.lineCount, 0),
+      new vscode.Range(index, 0, index, document.lineAt(index).text.length),
       text
     );
 
