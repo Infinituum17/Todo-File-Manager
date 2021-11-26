@@ -84,6 +84,9 @@ class DocumentParser {
     // TODO Head
     let htmlbuffer = /* html */ `
       <div id="todo_head">
+        <a title="Save file" class="rounded_button" id="todo_save">
+          <i class="codicon codicon-save"></i>
+        </a>
         <a title="Add new todo" class="rounded_button" id="todo_new">
           <i class="codicon codicon-add"></i>
         </a>
