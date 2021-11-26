@@ -75,14 +75,11 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
   }
 
   private removeTodo(document: vscode.TextDocument, id: string) {
-    // TODO: Remove a TODO
-    const text = document.getText();
-
-    let i = this.getIndexFromId(document, id);
-
-    // FIXME: Optimize: do not use Array manipulation
-
-    this.updateLineInTextDocument(document, "", i);
+    this.updateLineInTextDocument(
+      document,
+      "",
+      this.getIndexFromId(document, id)
+    );
   }
 
   private toggleTodo(document: vscode.TextDocument, id: string) {
@@ -90,19 +87,17 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
 
     let i = this.getIndexFromId(document, id);
 
-    // FIXME: Optimize: do not use Array manipulation
+    let line = text.split("\n")[i];
 
-    const lines = text.split("\n");
-
-    if (lines[i].match("[x]")) {
-      lines[i] = lines[i].replace("[x]", "[ ]");
-    } else if (lines[i].match("[?]")) {
-      lines[i] = lines[i].replace("[?]", "[x]");
-    } else if (lines[i].match("[ ]")) {
-      lines[i] = lines[i].replace("[ ]", "[?]");
+    if (line.match("[x]")) {
+      line = line.replace("[x]", "[ ]");
+    } else if (line.match("[?]")) {
+      line = line.replace("[?]", "[x]");
+    } else if (line.match("[ ]")) {
+      line = line.replace("[ ]", "[?]");
     }
 
-    this.updateLineInTextDocument(document, lines[i], i);
+    this.updateLineInTextDocument(document, line, i);
   }
 
   private getIndexFromId(document: vscode.TextDocument, id: string) {
@@ -112,12 +107,22 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
       for (; i < document.lineCount; i++) {
         console.log(document.lineAt(i));
         if (!document.lineAt(i).isEmptyOrWhitespace) {
-          break;
+          return i;
         }
       }
     }
 
-    return i;
+    return -1;
+  }
+
+  private getNextBlankLine(document: vscode.TextDocument) {
+    for (let i = 0; i < document.lineCount; i++) {
+      if (document.lineAt(i).isEmptyOrWhitespace) {
+        return i;
+      }
+    }
+
+    return -1;
   }
 
   private updateLineInTextDocument(
