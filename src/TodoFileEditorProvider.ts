@@ -75,19 +75,17 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
   }
 
   private removeTodo(document: vscode.TextDocument, id: string) {
-    this.updateLineInTextDocument(
-      document,
-      "",
-      this.getIndexFromId(document, id)
-    );
+    const index = this.getIndexFromId(document, id);
+
+    this.updateLineInTextDocument(document, "", index);
   }
 
   private toggleTodo(document: vscode.TextDocument, id: string) {
     const text = document.getText();
 
-    let i = this.getIndexFromId(document, id);
+    let index = this.getIndexFromId(document, id);
 
-    let line = text.split("\n")[i];
+    let line = text.split("\n")[index];
 
     if (line.match("[x]")) {
       line = line.replace("[x]", "[ ]");
@@ -97,7 +95,7 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
       line = line.replace("[ ]", "[?]");
     }
 
-    this.updateLineInTextDocument(document, line, i);
+    this.updateLineInTextDocument(document, line, index);
   }
 
   private getIndexFromId(document: vscode.TextDocument, id: string) {
@@ -107,12 +105,12 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
       for (; i < document.lineCount; i++) {
         console.log(document.lineAt(i));
         if (!document.lineAt(i).isEmptyOrWhitespace) {
-          return i;
+          break;
         }
       }
     }
 
-    return -1;
+    return i;
   }
 
   private getNextBlankLine(document: vscode.TextDocument) {
