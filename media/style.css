@@ -50,6 +50,7 @@
 
 input {
   border-radius: 0.25rem;
+  box-shadow: 0px 0.2rem var(--vscode-widget-shadow);
 }
 
 .todo > [class*="_title"] {
