@@ -68,9 +68,21 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
 
   private removeTodo(document: vscode.TextDocument, id: string) {
     // TODO: Remove a TODO
-    const text = "";
+  }
 
-    this.updateTextDocument(document, text);
+  private getIndexFromId(document: vscode.TextDocument, id: string) {
+    let i = parseInt(id);
+
+    if (document.lineAt(i).isEmptyOrWhitespace) {
+      for (; i < document.lineCount; i++) {
+        console.log(document.lineAt(i));
+        if (!document.lineAt(i).isEmptyOrWhitespace) {
+          break;
+        }
+      }
+    }
+
+    return i;
   }
 
   private updateLineInTextDocument(
