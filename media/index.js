@@ -123,8 +123,6 @@ class DocumentParser {
       `;
     });
 
-    //HTML Footer
-
     root.innerHTML = htmlbuffer;
 
     // TODO: Event Handling
@@ -134,6 +132,10 @@ class DocumentParser {
       .querySelector("#todo_head #todo_save")
       .addEventListener("click", () => vscode.postMessage({ type: "save" }));
 
+    // @ts-ignore
+    root
+      .querySelector("#todo_head #todo_new")
+      .addEventListener("click", () => {});
 
     for (let i = 0; i < tokens.length; i++) {
       const currentElement = root.querySelector(`#todo_${i}`);
