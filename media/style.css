@@ -33,10 +33,13 @@
 
   background-color: #7e57c2;
   box-shadow: 0px 0.2rem #451ab3;
+
+  transition: background-color 0.2s ease-in-out;
 }
 
 .rounded_button:hover {
   color: white;
+  background-color: #623ea0;
 }
 
 #todo_head {
@@ -67,12 +70,24 @@ input {
   box-shadow: 0px 0.2rem #00377f;
 }
 
+.todo > .question:hover {
+  background-color: #0068ad;
+}
+
 .todo > .pass {
   background-color: #00967f;
   box-shadow: 0px 0.2rem #005d49;
 }
 
+.todo > .pass:hover {
+  background-color: #007a68;
+}
+
 .todo > .todo_delete {
   background-color: #d7436d;
   box-shadow: 0px 0.2rem #640017;
+}
+
+.todo > .todo_delete:hover {
+  background-color: #9e2749;
 }
