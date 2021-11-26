@@ -53,6 +53,9 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
         case "remove":
           this.removeTodo(document, e.id);
           return;
+        case "save":
+          document.save();
+          return;
       }
     });
 

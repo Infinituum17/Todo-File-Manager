@@ -128,8 +128,12 @@ class DocumentParser {
     root.innerHTML = htmlbuffer;
 
     // TODO: Event Handling
+
     // @ts-ignore
-    root.querySelector("#todo_head #todo_new").onclick = () => {};
+    root
+      .querySelector("#todo_head #todo_save")
+      .addEventListener("click", () => vscode.postMessage({ type: "save" }));
+
 
     for (let i = 0; i < tokens.length; i++) {
       // @ts-ignore
