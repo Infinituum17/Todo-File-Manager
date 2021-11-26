@@ -81,7 +81,7 @@ class DocumentParser {
 
     const tokens = DocumentParser.parseTokens(text);
 
-    // HTML Head
+    // TODO Head
     let htmlbuffer = /* html */ `
       <div id="todo_head">
         <a title="Add new todo" class="rounded_button" id="todo_new">
@@ -90,7 +90,7 @@ class DocumentParser {
       </div>
     `;
 
-    // HTML Body
+    // TODO Body
     tokens.forEach((token) => {
       const currentStatus = token.isOptional
         ? "question"
@@ -103,6 +103,8 @@ class DocumentParser {
         : token.isChecked
         ? "Completed"
         : "To complete";
+
+      // TODO: Use kebab case
 
       htmlbuffer += /* html */ `
         <div class="todo" id="todo_${token.id}">
