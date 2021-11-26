@@ -67,11 +67,14 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
     updateWebview();
   }
 
-  private addTodo(document: vscode.TextDocument) {
-    // TODO: Add a TODO
-    const text = document.getText();
+  private async addTodo(document: vscode.TextDocument) {
+    let blankIndex = this.getNextBlankLineIndex(document);
 
-    /* this.updateLineInTextDocument(document, text) */
+    if (blankIndex === document.lineCount) {
+      await this.addNewLineAtIndex(document, blankIndex);
+    }
+
+    await this.updateLineInTextDocument(document, " - [-]()()", blankIndex);
   }
 
   private removeTodo(document: vscode.TextDocument, id: string) {
@@ -88,11 +91,11 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
     let line = text.split("\n")[index];
 
     if (line.match("[x]")) {
-      line = line.replace("[x]", "[ ]");
+      line = line.replace("[x]", "[-]");
     } else if (line.match("[?]")) {
       line = line.replace("[?]", "[x]");
-    } else if (line.match("[ ]")) {
-      line = line.replace("[ ]", "[?]");
+    } else if (line.match("[-]")) {
+      line = line.replace("[-]", "[?]");
     }
 
     this.updateLineInTextDocument(document, line, index);
@@ -113,17 +116,33 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
     return i;
   }
 
-  private getNextBlankLine(document: vscode.TextDocument) {
+  private getNextBlankLineIndex(document: vscode.TextDocument) {
     for (let i = 0; i < document.lineCount; i++) {
       if (document.lineAt(i).isEmptyOrWhitespace) {
         return i;
       }
     }
 
-    return -1;
+    return document.lineCount;
   }
 
-  private updateLineInTextDocument(
+  private async addNewLineAtIndex(document: vscode.TextDocument, line: number) {
+    const edit = new vscode.WorkspaceEdit();
+
+    if (line === document.lineCount) {
+      line = document.lineCount - 1;
+    }
+
+    edit.insert(
+      document.uri,
+      new vscode.Position(line, document.lineAt(line).text.length),
+      "\n"
+    );
+
+    return await vscode.workspace.applyEdit(edit);
+  }
+
+  private async updateLineInTextDocument(
     document: vscode.TextDocument,
     text: string,
     index: number
@@ -136,7 +155,7 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
       text
     );
 
-    return vscode.workspace.applyEdit(edit);
+    return await vscode.workspace.applyEdit(edit);
   }
 
   private getHtmlForWebview(webview: vscode.Webview): string {

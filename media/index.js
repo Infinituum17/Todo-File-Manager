@@ -22,14 +22,27 @@ class DocumentParser {
   static parseLine(/** @type {string} */ line, /** @type {Number} */ id) {
     const obj = {};
 
-    if (/\[(x|\s|\?)\]\s{0,1}[^\[\]]+:\s{0,1}[^\[\]\:]+/gim.test(line)) {
-      const [, title, description] = line.trim().split(/\]|:/gi);
-      const boxContent = line.slice(1, 2);
+    // | - [x](title)(description)
+    //
+    // | - [-]()() -> TODO not completed
+    // | - [?]()() -> TODO optional
+    // | - [x]()() -> TODO completed
+    // | Old regex: " /\[(x|\s|\?)\]\s{0,1}[^\[\]]*:\s{0,1}[^\[\]\:]+/gim "
+
+    const integrity = /\s{0,1}\-\s{0,1}\[(x|\-|\?)\]\(.*\)\(.*\)/gi;
+
+    if (integrity.test(line)) {
+      const status = line.match(/\[(x|\-|\?)\]/gi)[0].replaceAll(/\[|\]/g, "");
+      const [title, description] = line
+        .match(/\(.*\)\(.*\)/gi)[0]
+        .split(")(")
+        .map((v) => v.replaceAll(/\(|\)/g, ""));
 
       obj.id = id;
       obj.title = title.trim();
       obj.description = description.trim();
-      switch (boxContent) {
+
+      switch (status) {
         case "x":
           obj.isChecked = true;
           obj.isOptional = false;
@@ -38,7 +51,7 @@ class DocumentParser {
           obj.isChecked = false;
           obj.isOptional = true;
           break;
-        case " ":
+        case "-":
           obj.isChecked = false;
           obj.isOptional = false;
           break;
@@ -135,7 +148,7 @@ class DocumentParser {
     // @ts-ignore
     root
       .querySelector("#todo_head #todo_new")
-      .addEventListener("click", () => {});
+      .addEventListener("click", () => vscode.postMessage({ type: "add" }));
 
     for (let i = 0; i < tokens.length; i++) {
       const currentElement = root.querySelector(`#todo_${i}`);
