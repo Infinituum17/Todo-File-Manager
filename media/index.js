@@ -165,6 +165,57 @@ class DocumentParser {
         .addEventListener("click", () =>
           vscode.postMessage({ type: "remove", id: i })
         );
+
+      (() => {
+        const cooldown = 750;
+        let titleTimeout = null;
+        let descTimeout = null;
+
+        currentElement
+          .querySelector(".todo_title")
+          .addEventListener("input", () => {
+            const reset = () => {
+              titleTimeout = null;
+              vscode.postMessage({
+                type: "update",
+                id: i,
+                space: "title",
+                // @ts-ignore
+                content: currentElement.querySelector(".todo_title").value,
+              });
+            };
+
+            if (titleTimeout === null) {
+              titleTimeout = setTimeout(reset, cooldown);
+            } else {
+              clearTimeout(titleTimeout);
+              titleTimeout = setTimeout(reset, cooldown);
+            }
+          });
+
+        currentElement
+          .querySelector(".todo_description")
+          .addEventListener("input", () => {
+            const reset = () => {
+              descTimeout = null;
+              vscode.postMessage({
+                type: "update",
+                id: i,
+                space: "description",
+                content:
+                  // @ts-ignore
+                  currentElement.querySelector(".todo_description").value,
+              });
+            };
+
+            if (descTimeout === null) {
+              descTimeout = setTimeout(reset, cooldown);
+            } else {
+              clearTimeout(descTimeout);
+              descTimeout = setTimeout(reset, cooldown);
+            }
+          });
+      })();
     }
   };
 

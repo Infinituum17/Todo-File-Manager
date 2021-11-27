@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
+import { Events } from "./interfaces";
 import { getNonce } from "./util";
+
+// FIXME: Saving before timeout causes flickering
 
 export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
   private static readonly viewType = "TodoCustoms.TodoFileManager";
@@ -44,18 +47,25 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
       changeDocumentSubscription.dispose();
     });
 
-    webviewPanel.webview.onDidReceiveMessage((e) => {
+    webviewPanel.webview.onDidReceiveMessage((e: Events) => {
       switch (e.type) {
         case "add":
           this.addTodo(document);
+          updateWebview();
           return;
 
         case "remove":
           this.removeTodo(document, e.id);
+          updateWebview();
           return;
 
         case "toggle":
           this.toggleTodo(document, e.id);
+          updateWebview();
+          return;
+
+        case "update":
+          this.updateTodo(document, e.id, e.space, e.content);
           return;
 
         case "save":
@@ -63,8 +73,6 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
           return;
       }
     });
-
-    updateWebview();
   }
 
   private async addTodo(document: vscode.TextDocument) {
@@ -84,11 +92,9 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
   }
 
   private toggleTodo(document: vscode.TextDocument, id: string) {
-    const text = document.getText();
-
     let index = this.getIndexFromId(document, id);
 
-    let line = text.split("\n")[index];
+    let line = document.getText().split("\n")[index];
 
     if (line.match("[x]")) {
       line = line.replace("[x]", "[-]");
@@ -99,6 +105,36 @@ export class TodoFileEditorProvider implements vscode.CustomTextEditorProvider {
     }
 
     this.updateLineInTextDocument(document, line, index);
+  }
+
+  private updateTodo(
+    document: vscode.TextDocument,
+    id: string,
+    space: string,
+    content: string
+  ) {
+    let index = this.getIndexFromId(document, id);
+
+    let line = document.getText().split("\n")[index];
+
+    let [title, description] = line
+      .replace(/\s{0,1}\-\s{0,1}\[(x|\-|\?)\]/gi, "")
+      .split(/\)\(/gi)
+      .map((v) => v.replace(/\(|\)/gi, ""));
+
+    if (space === "title") {
+      title = content;
+    } else if (space === "description") {
+      description = content;
+    }
+
+    this.updateLineInTextDocument(
+      document,
+      `${
+        line.match(/\s{0,1}\-\s{0,1}\[(x|\-|\?)\]/gi)![0]
+      }(${title})(${description})`,
+      index
+    );
   }
 
   private getIndexFromId(document: vscode.TextDocument, id: string) {
